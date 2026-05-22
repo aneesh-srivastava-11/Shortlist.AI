@@ -1,0 +1,128 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum SubscriptionTier {
+  FREE
+  PREMIUM
+}
+
+enum FileType {
+  PDF
+  DOCX
+}
+
+model User {
+  id               String          @id @default(uuid())
+  email            String          @unique
+  name             String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  subscription     Subscription?
+  resumes          Resume[]
+  usageLogs        UsageLog[]
+  coverLetters     CoverLetter[]
+}
+
+model Subscription {
+  id                 String           @id @default(uuid())
+  userId             String           @unique
+  user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tier               SubscriptionTier @default(FREE)
+  stripeCustomerId   String?          @unique
+  stripeSubscriptionId String?        @unique
+  stripePriceId      String?
+  endsAt             DateTime?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+}
+
+model Resume {
+  id          String          @id @default(uuid())
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  versions    ResumeVersion[]
+}
+
+model ResumeVersion {
+  id              String           @id @default(uuid())
+  resumeId        String
+  resume          Resume           @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  versionNumber   Int
+  rawText         String           @db.Text
+  structuredJson  Json             // Extracted contact info, work exp, skills, education, projects
+  fileUrl         String           // Vercel Blob storage link or static path
+  fileType        FileType
+  analyses        ATSAnalysis[]
+  createdAt       DateTime         @default(now())
+}
+
+model JobDescription {
+  id             String        @id @default(uuid())
+  title          String
+  company        String
+  rawText        String        @db.Text
+  parsedKeywords Json          // Extracted skills, level, intent
+  analyses       ATSAnalysis[]
+  coverLetters   CoverLetter[]
+  createdAt      DateTime      @default(now())
+}
+
+model ATSAnalysis {
+  id              String        @id @default(uuid())
+  resumeVersionId String
+  resumeVersion   ResumeVersion @relation(fields: [resumeVersionId], references: [id], onDelete: Cascade)
+  jobDescId       String
+  jobDescription  JobDescription @relation(fields: [jobDescId], references: [id], onDelete: Cascade)
+  
+  // Scoring
+  overallScore    Int
+  keywordScore    Int
+  formattingScore Int
+  readabilityScore Int
+  impactScore     Int
+  
+  // Detailed Feedback
+  missingKeywords Json          // String[]
+  keywordHeatmap  Json          // Map of word to importance & occurrence
+  bulletFeedback  Json          // List of original bullet, feedback, and suggested rewrites
+  recruiterSim    Json          // First impressions, red flags, likely interview rate
+  formattingIssues Json         // String[]
+  
+  createdAt       DateTime      @default(now())
+}
+
+model CoverLetter {
+  id              String        @id @default(uuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobDescId       String
+  jobDescription  JobDescription @relation(fields: [jobDescId], references: [id], onDelete: Cascade)
+  content         String        @db.Text
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model Template {
+  id          String   @id @default(uuid())
+  name        String
+  htmlContent String   @db.Text
+  cssContent  String   @db.Text
+  isPremium   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model UsageLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action    String   // e.g., "RESUME_PARSE", "AI_REWRITE", "RECRUITER_SIM"
+  createdAt DateTime @default(now())
+}
