@@ -29,7 +29,7 @@ export async function parseResumeText(rawText: string) {
   }
 
   const model = genAI.getGenerativeModel({
-    model: 'gemini-1.5-flash',
+    model: 'gemini-2.5-flash',
     generationConfig: { responseMimeType: 'application/json' },
   });
 
@@ -90,7 +90,7 @@ export async function parseJobDescription(jdText: string): Promise<ParsedJD> {
   }
 
   const model = genAI.getGenerativeModel({
-    model: 'gemini-1.5-flash',
+    model: 'gemini-2.5-flash',
     generationConfig: { responseMimeType: 'application/json' },
   });
 
@@ -134,7 +134,7 @@ export async function analyzeResumeVsJob(
   }
 
   const model = genAI.getGenerativeModel({
-    model: 'gemini-1.5-flash',
+    model: 'gemini-2.5-flash',
     generationConfig: { responseMimeType: 'application/json' },
   });
 
@@ -209,7 +209,7 @@ export async function rewriteBulletPoint(bullet: string, contextKeywords: string
   }
 
   const model = genAI.getGenerativeModel({
-    model: 'gemini-1.5-flash',
+    model: 'gemini-2.5-flash',
     generationConfig: { responseMimeType: 'application/json' },
   });
 
@@ -246,7 +246,7 @@ export async function generateCoverLetter(resumeText: string, jdText: string) {
   }
 
   const model = genAI.getGenerativeModel({
-    model: 'gemini-1.5-flash',
+    model: 'gemini-2.5-flash',
   });
 
   const prompt = `

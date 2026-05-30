@@ -50,7 +50,7 @@ graph TD
 * **Styling & Tokens**: Tailwind CSS v4, custom `@theme` variables, Google Fonts (Bebas Neue & JetBrains Mono)
 * **Database Layer**: Prisma ORM v7 with `@prisma/adapter-pg` PostgreSQL adapter
 * **Parsing Engines**: `pdf-parse` (TypeScript ES) & `mammoth.js`
-* **AI Model**: Google Gemini SDK (`gemini-1.5-flash`)
+* **AI Model**: Google Gemini SDK (`gemini-2.5-flash`)
 
 ---
 
