@@ -1,9 +1,10 @@
-import pdf from 'pdf-parse';
+import { PDFParse } from 'pdf-parse';
 import mammoth from 'mammoth';
 
 export async function parsePdf(buffer: Buffer): Promise<string> {
   try {
-    const result = await pdf(buffer);
+    const parser = new PDFParse({ data: buffer });
+    const result = await parser.getText();
     return result.text;
   } catch (error) {
     console.error('Error parsing PDF:', error);
