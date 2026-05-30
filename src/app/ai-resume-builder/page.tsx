@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { Sparkles, FileText, CheckCircle2, ChevronRight, Layout, ListChecks } from 'lucide-react';
+import { Sparkles, ChevronRight, Layout } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'AI Resume Builder | Write Professional Resumes Online | Shortlist.AI',

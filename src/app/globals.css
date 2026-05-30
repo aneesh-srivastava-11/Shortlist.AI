@@ -1,98 +1,101 @@
 @import "tailwindcss";
 
 :root {
-  --background: 224 71% 4%;
-  --foreground: 210 20% 98%;
+  --background: #F5F0EB;
+  --foreground: #0A0A0A;
   
-  --card: 224 71% 4%;
-  --card-foreground: 210 20% 98%;
+  --card: #F5F0EB;
+  --card-foreground: #0A0A0A;
   
-  --popover: 224 71% 4%;
-  --popover-foreground: 210 20% 98%;
+  --popover: #F5F0EB;
+  --popover-foreground: #0A0A0A;
   
-  --primary: 263.4 70% 50.4%;
-  --primary-foreground: 210 20% 98%;
+  --primary: #E8820C; /* Saturated Amber */
+  --primary-foreground: #F5F0EB;
   
-  --secondary: 215 27.9% 16.9%;
-  --secondary-foreground: 210 20% 98%;
+  --secondary: #EBE4DC;
+  --secondary-foreground: #0A0A0A;
   
-  --muted: 215 27.9% 16.9%;
-  --muted-foreground: 217.9 10.6% 64.9%;
+  --muted: #E5DDD4;
+  --muted-foreground: #5E5851;
   
-  --accent: 215 27.9% 16.9%;
-  --accent-foreground: 210 20% 98%;
+  --accent: #E8820C;
+  --accent-foreground: #F5F0EB;
   
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 20% 98%;
+  --destructive: #D12626;
+  --destructive-foreground: #F5F0EB;
   
-  --border: 215 27.9% 16.9%;
-  --input: 215 27.9% 16.9%;
-  --ring: 263.4 70% 50.4%;
+  --border: #0A0A0A;
+  --input: #F5F0EB;
+  --ring: #E8820C;
   
-  --radius: 0.75rem;
+  --radius: 0px; /* Sharp brutalist edges */
 }
 
-.light {
-  --background: 0 0% 100%;
-  --foreground: 224 71% 4%;
+.dark {
+  --background: #0A0A0A;
+  --foreground: #F5F0EB;
   
-  --card: 0 0% 100%;
-  --card-foreground: 224 71% 4%;
+  --card: #0A0A0A;
+  --card-foreground: #F5F0EB;
   
-  --popover: 0 0% 100%;
-  --popover-foreground: 224 71% 4%;
+  --popover: #0A0A0A;
+  --popover-foreground: #F5F0EB;
   
-  --primary: 262.1 83.3% 57.8%;
-  --primary-foreground: 210 20% 98%;
+  --primary: #C8F135; /* Acid Green */
+  --primary-foreground: #0A0A0A;
   
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
+  --secondary: #141414;
+  --secondary-foreground: #F5F0EB;
   
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
+  --muted: #1E1E1E;
+  --muted-foreground: #9E9790;
   
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
+  --accent: #C8F135;
+  --accent-foreground: #0A0A0A;
   
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 20% 98%;
+  --destructive: #FF4A4A;
+  --destructive-foreground: #0A0A0A;
   
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 262.1 83.3% 57.8%;
+  --border: #F5F0EB;
+  --input: #0A0A0A;
+  --ring: #C8F135;
 }
 
 @theme {
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
   
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
   
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
   
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
   
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
   
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
   
-  --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-sm: 0px;
+  
+  --font-bebas: var(--font-bebas-neue), sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
   
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
@@ -116,44 +119,42 @@
 }
 
 body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+  background-color: var(--background);
+  color: var(--foreground);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   overflow-x: hidden;
 }
 
-/* Custom Scrollbar for premium editor feel */
+/* Custom Scrollbar for brutalist mono feel */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--background);
+  border-left: 1px solid var(--border);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(120, 119, 198, 0.2);
-  border-radius: 9999px;
+  background: var(--border);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(120, 119, 198, 0.4);
+  background: var(--primary);
 }
 
 /* CSS Grid Dot Pattern Backgrounds */
 .grid-bg {
-  background-image: radial-gradient(rgba(120, 119, 198, 0.1) 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-image: linear-gradient(rgba(10, 10, 10, 0.08) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(10, 10, 10, 0.08) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
-/* Neon Glow Accents */
-.glow-primary {
-  box-shadow: 0 0 40px -10px rgba(139, 92, 246, 0.15);
-}
-
-.glow-green {
-  box-shadow: 0 0 40px -10px rgba(34, 197, 94, 0.15);
+.dark .grid-bg {
+  background-image: linear-gradient(rgba(245, 240, 235, 0.06) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(245, 240, 235, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
 /* Radial Progress Bar Styles */
@@ -166,17 +167,14 @@ body {
   width: var(--size);
   height: var(--size);
   place-content: center;
-  border-radius: 50%;
 }
 
 .radial-progress::after {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 50%;
   padding: var(--thickness);
-  background: radial-gradient(farthest-side, currentColor 98%, #0000) top/var(--thickness) var(--thickness) no-repeat,
-              conic-gradient(currentColor calc(var(--value) * 1%), #0000 0);
+  background: conic-gradient(currentColor calc(var(--value) * 1%), transparent 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: xor;
   mask-composite: exclude;

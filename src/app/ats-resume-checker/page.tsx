@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { Sparkles, FileText, CheckCircle2, ChevronRight, ShieldCheck, Cpu } from 'lucide-react';
+import { Sparkles, CheckCircle2, ChevronRight, Cpu } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Free ATS Resume Checker & Scanner | Shortlist.AI',

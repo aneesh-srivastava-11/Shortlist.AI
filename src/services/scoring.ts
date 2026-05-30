@@ -51,7 +51,8 @@ export function runATSRulesEngine(input: RulesEngineInput): RulesEngineOutput {
   const totalWordCount = words.length || 1;
 
   targetKeywords.forEach(keyword => {
-    const regex = new RegExp(`\\b${keyword.toLowerCase()}\\b`, 'gi');
+    const escapedKeyword = keyword.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(?<![a-zA-Z0-9])${escapedKeyword}(?![a-zA-Z0-9])`, 'gi');
     const matches = cleanText.match(regex);
     const count = matches ? matches.length : 0;
     const density = (count / totalWordCount) * 100;

@@ -25,9 +25,10 @@ export async function POST(req: NextRequest) {
       explanation: rewriteResult.explanation,
       metricsAdded: rewriteResult.metricsAdded,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Rewrite handler error:', error);
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+    const err = error as Error;
+    return NextResponse.json({ error: err.message || 'Internal Server Error' }, { status: 500 });
   }
 }
 

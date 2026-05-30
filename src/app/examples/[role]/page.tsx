@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Sparkles, FileText, ChevronRight, Check } from 'lucide-react';
+import { Sparkles, FileText, ChevronRight } from 'lucide-react';
 
 interface PageProps {
   params: Promise<{ role: string }>;

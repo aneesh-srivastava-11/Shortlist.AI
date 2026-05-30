@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { Sparkles, FileText, CheckCircle2, ChevronRight, Award, Zap } from 'lucide-react';
+import { Sparkles, ChevronRight, Award } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'AI Resume Optimizer | Tailor Resumes for Jobs | Shortlist.AI',

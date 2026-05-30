@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { StructuredResume, ParsedJD, AnalysisResult } from '@/types';
 
 const apiKey = process.env.GEMINI_API_KEY || '';
 const genAI = new GoogleGenerativeAI(apiKey);
@@ -83,7 +84,7 @@ export async function parseResumeText(rawText: string) {
 /**
  * Analyzes a Job Description to extract requirements, key hard/soft skills, and recruiter intent.
  */
-export async function parseJobDescription(jdText: string) {
+export async function parseJobDescription(jdText: string): Promise<ParsedJD> {
   if (!apiKey) {
     throw new Error('GEMINI_API_KEY is not defined in environment variables.');
   }
@@ -123,11 +124,11 @@ export async function parseJobDescription(jdText: string) {
  * reviews formatting, audits bullets, and runs recruiter simulation.
  */
 export async function analyzeResumeVsJob(
-  structuredResume: any,
-  parsedJD: any,
+  structuredResume: StructuredResume,
+  parsedJD: ParsedJD,
   rawResumeText: string,
   rawJDText: string
-) {
+): Promise<AnalysisResult> {
   if (!apiKey) {
     throw new Error('GEMINI_API_KEY is not defined in environment variables.');
   }

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { parseJobDescription, analyzeResumeVsJob } from '@/lib/gemini';
 import { runATSRulesEngine } from '@/services/scoring';
 import { db } from '@/lib/db';
+import { StructuredResume, ParsedJD, Skill, AnalysisResult } from '@/types';
+import { Prisma } from '@prisma/client';
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,7 +17,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 1. Parse job description
-    let parsedJD;
+    let parsedJD: ParsedJD;
     try {
       parsedJD = await parseJobDescription(jdText);
     } catch (aiError) {
@@ -24,7 +26,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Extract target keywords
-    const targetKeywords = parsedJD.skills.map((s: any) => s.name);
+    const targetKeywords = parsedJD.skills.map((s: Skill) => s.name);
 
     // 2. Run ATS Rules Heuristic Engine
     const rulesOutput = runATSRulesEngine({
@@ -39,7 +41,7 @@ export async function POST(req: NextRequest) {
       aiAnalysis = await analyzeResumeVsJob(structuredResume, parsedJD, rawResumeText, jdText);
     } catch (aiError) {
       console.warn('Gemini overall comparison failed. Using mock analysis.', aiError);
-      aiAnalysis = generateMockAnalysis(structuredResume, parsedJD, rulesOutput);
+      aiAnalysis = generateMockAnalysis(structuredResume, parsedJD);
     }
 
     // 4. Combine/Merge Scores
@@ -85,6 +87,17 @@ export async function POST(req: NextRequest) {
     // 5. Optionally store in database
     if (userId) {
       try {
+        // Ensure User exists to avoid foreign key constraints
+        await db.user.upsert({
+          where: { id: userId },
+          update: {},
+          create: {
+            id: userId,
+            email: `${userId}@example.com`,
+            name: 'Sandbox User',
+          },
+        });
+
         // Find or create default resume
         let resume = await db.resume.findFirst({
           where: { userId },
@@ -117,7 +130,7 @@ export async function POST(req: NextRequest) {
             title: parsedJD.title,
             company: parsedJD.company,
             rawText: jdText,
-            parsedKeywords: parsedJD,
+            parsedKeywords: parsedJD as unknown as Prisma.InputJsonValue,
           },
         });
 
@@ -132,9 +145,9 @@ export async function POST(req: NextRequest) {
             readabilityScore: aiAnalysis.readabilityScore,
             impactScore: aiAnalysis.impactScore,
             missingKeywords: aiAnalysis.missingKeywords,
-            keywordHeatmap: aiAnalysis.keywordHeatmap,
-            bulletFeedback: aiAnalysis.bulletFeedback,
-            recruiterSim: aiAnalysis.recruiterSim,
+            keywordHeatmap: aiAnalysis.keywordHeatmap as unknown as Prisma.InputJsonValue,
+            bulletFeedback: aiAnalysis.bulletFeedback as unknown as Prisma.InputJsonValue,
+            recruiterSim: aiAnalysis.recruiterSim as unknown as Prisma.InputJsonValue,
             formattingIssues: combinedFormattingIssues,
           },
         });
@@ -148,13 +161,14 @@ export async function POST(req: NextRequest) {
       analysis: mergedAnalysis,
       jobDetails: parsedJD,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Analysis handler error:', error);
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+    const err = error as Error;
+    return NextResponse.json({ error: err.message || 'Internal Server Error' }, { status: 500 });
   }
 }
 
-function generateMockJDData(jdText: string) {
+function generateMockJDData(_jdText: string): ParsedJD {
   return {
     title: 'Senior Software Engineer',
     company: 'NextGen SaaS',
@@ -170,28 +184,32 @@ function generateMockJDData(jdText: string) {
     ],
     experienceLevel: 'Senior',
     recruiterIntent: 'Looking for a full stack engineer with strong Next.js and API optimization experience.',
-    summaryOfRole: 'Build highly responsive web applications and scale backend database queries.',
+    summaryOfRole: 'Build highly responsive web applications and scale database query times.',
   };
 }
 
-function generateMockAnalysis(structuredResume: any, parsedJD: any, rulesOutput: any) {
+function generateMockAnalysis(
+  structuredResume: StructuredResume,
+  parsedJD: ParsedJD
+): Omit<AnalysisResult, 'contactInfoAlerts' | 'keywordDensityAlerts'> {
   // Check which JD skills are present in the resume skills
-  const resumeSkillsLower = (structuredResume.skills || []).map((s: any) => s.name.toLowerCase());
+  const resumeSkillsLower = (structuredResume.skills || []).map((s: Skill) => s.name.toLowerCase());
   const missingKeywords: string[] = [];
-  const keywordHeatmap: any[] = [];
+  const keywordHeatmap: { word: string; importance: 'High' | 'Medium' | 'Low'; matchesInResume: number }[] = [];
 
-  parsedJD.skills.forEach((skill: any) => {
+  parsedJD.skills.forEach((skill: Skill) => {
     const isPresent = resumeSkillsLower.some((rs: string) => rs.includes(skill.name.toLowerCase()));
+    const importance = skill.importance || 'Medium';
     if (!isPresent) {
       missingKeywords.push(skill.name);
-      keywordHeatmap.push({ word: skill.name, importance: skill.importance, matchesInResume: 0 });
+      keywordHeatmap.push({ word: skill.name, importance, matchesInResume: 0 });
     } else {
-      keywordHeatmap.push({ word: skill.name, importance: skill.importance, matchesInResume: 2 });
+      keywordHeatmap.push({ word: skill.name, importance, matchesInResume: 2 });
     }
   });
 
   // Bullet point analysis mock
-  const bulletFeedback: any[] = [];
+  const bulletFeedback: { original: string; feedback: string; rewrite: string }[] = [];
   if (structuredResume.workExperience && structuredResume.workExperience.length > 0) {
     const firstJob = structuredResume.workExperience[0];
     if (firstJob.bullets && firstJob.bullets.length > 0) {

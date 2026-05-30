@@ -24,13 +24,14 @@ export async function POST(req: NextRequest) {
       success: true,
       coverLetter: letterContent,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Cover letter generator handler error:', error);
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+    const err = error as Error;
+    return NextResponse.json({ error: err.message || 'Internal Server Error' }, { status: 500 });
   }
 }
 
-function generateMockCoverLetter(resumeText: string, jdText: string): string {
+function generateMockCoverLetter(resumeText: string, _jdText: string): string {
   // Simple regex extraction for contact/company details
   const emailMatch = resumeText.match(/[\w.-]+@[\w.-]+\.\w+/);
   const email = emailMatch ? emailMatch[0] : 'candidate@example.com';
